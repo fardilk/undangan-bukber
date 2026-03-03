@@ -6,9 +6,13 @@ import DaftarUndangan from './components/DaftarUndangan'
 import PesanBukber from './components/PesanBukber'
 import AyatPenutup from './components/AyatPenutup'
 import Footer from './components/Footer'
-import MusicToggle from './components/MusicToggle'
+import { useBackgroundMusic } from './hooks/useBackgroundMusic'
+
+const MUSIC_SRC = '/fiikuri-marhaban-ya-ramadan-promotion-commercial-background-music-307992.mp3'
 
 export default function App() {
+  useBackgroundMusic(MUSIC_SRC, 0.35)
+
   return (
     <div className="min-h-full bg-[#1a0a00] text-[#f5e6c8] font-['Lato',sans-serif]">
       <Hero />
@@ -19,7 +23,6 @@ export default function App() {
       <PesanBukber />
       <AyatPenutup />
       <Footer />
-      <MusicToggle />
     </div>
   )
 }

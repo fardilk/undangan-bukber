@@ -13,7 +13,17 @@ export function useBackgroundMusic(src: string, volume = 0.35) {
     document.body.appendChild(audio)
     audioRef.current = audio
 
+    // Auto-play on first scroll
+    const onScroll = () => {
+      if (audioRef.current && audioRef.current.paused) {
+        audioRef.current.play().then(() => setPlaying(true)).catch(() => {})
+      }
+      window.removeEventListener('scroll', onScroll)
+    }
+    window.addEventListener('scroll', onScroll, { once: true })
+
     return () => {
+      window.removeEventListener('scroll', onScroll)
       audio.pause()
       audio.src = ''
       document.body.removeChild(audio)
