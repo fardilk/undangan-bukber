@@ -6,30 +6,35 @@ export function useBackgroundMusic(src: string, volume = 0.35) {
   useEffect(() => {
     const audio = new Audio(src)
     audio.loop = true
-    audio.volume = volume
+    audio.volume = 0
+    audio.muted = true  // muted autoplay diizinkan semua browser
     audio.preload = 'auto'
     audioRef.current = audio
 
-    const tryPlay = () => {
+    // Start muted (always allowed)
+    audio.play().catch(() => {})
+
+    // Unmute on first interaction
+    const unmute = () => {
       if (!audioRef.current) return
-      audioRef.current.play().catch(() => {})
-      cleanup()
+      audioRef.current.muted = false
+      audioRef.current.volume = volume
+      document.removeEventListener('click',      unmute, true)
+      document.removeEventListener('touchstart', unmute, true)
+      document.removeEventListener('keydown',    unmute, true)
+      document.removeEventListener('scroll',     unmute, true)
     }
 
-    const cleanup = () => {
-      document.removeEventListener('scroll', tryPlay, true)
-      document.removeEventListener('touchstart', tryPlay, true)
-      document.removeEventListener('click', tryPlay, true)
-      document.removeEventListener('pointerdown', tryPlay, true)
-    }
-
-    document.addEventListener('scroll', tryPlay, { once: true, capture: true })
-    document.addEventListener('touchstart', tryPlay, { once: true, capture: true })
-    document.addEventListener('click', tryPlay, { once: true, capture: true })
-    document.addEventListener('pointerdown', tryPlay, { once: true, capture: true })
+    document.addEventListener('click',      unmute, { once: true, capture: true })
+    document.addEventListener('touchstart', unmute, { once: true, capture: true })
+    document.addEventListener('keydown',    unmute, { once: true, capture: true })
+    document.addEventListener('scroll',     unmute, { once: true, capture: true })
 
     return () => {
-      cleanup()
+      document.removeEventListener('click',      unmute, true)
+      document.removeEventListener('touchstart', unmute, true)
+      document.removeEventListener('keydown',    unmute, true)
+      document.removeEventListener('scroll',     unmute, true)
       audio.pause()
       audio.src = ''
       audioRef.current = null
