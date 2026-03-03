@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import FadeIn from './FadeIn'
 
 interface Pesan {
   name: string
@@ -42,8 +43,11 @@ export default function PesanBukber() {
 
   return (
     <section className="bg-[#150700] py-16 px-6 border-t border-[#d4a854]/10">
-      <p className="text-[#d4a854] text-xs md:text-sm tracking-[0.3em] uppercase text-center mb-8">Pesan & Doa</p>
+      <FadeIn>
+        <p className="text-[#d4a854] text-xs md:text-sm tracking-[0.3em] uppercase text-center mb-8">Pesan & Doa</p>
+      </FadeIn>
 
+      <FadeIn delay={100}>
       <div className="max-w-xl mx-auto space-y-3 mb-4">
         <input
           type="text"
@@ -69,13 +73,16 @@ export default function PesanBukber() {
           {sending ? 'Mengirim...' : 'Kirim Pesan'}
         </button>
       </div>
+      </FadeIn>
 
       <div className="max-w-xl mx-auto mt-8 space-y-3">
         {messages.map((m, i) => (
-          <div key={i} className="rounded-lg p-4 bg-[#d4a854]/5 border border-[#d4a854]/15">
-            <p className="text-xs md:text-sm font-semibold text-[#d4a854] mb-1">{m.name}</p>
-            <p className="text-sm md:text-base text-[#f5e6c8]/80 leading-relaxed">{m.message}</p>
-          </div>
+          <FadeIn key={i} delay={i * 60}>
+            <div className="rounded-lg p-4 bg-[#d4a854]/5 border border-[#d4a854]/15">
+              <p className="text-xs md:text-sm font-semibold text-[#d4a854] mb-1">{m.name}</p>
+              <p className="text-sm md:text-base text-[#f5e6c8]/80 leading-relaxed">{m.message}</p>
+            </div>
+          </FadeIn>
         ))}
       </div>
     </section>

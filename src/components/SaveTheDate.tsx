@@ -1,5 +1,6 @@
 import { Calendar } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import FadeIn from './FadeIn'
 
 const EVENT_DATE = new Date('2026-03-07T15:00:00+07:00').getTime()
 
@@ -32,28 +33,33 @@ export default function SaveTheDate() {
 
   return (
     <section className="bg-[#120600] py-16 px-6 text-center border-t border-[#d4a854]/10">
-      <p className="text-[#d4a854] text-xs md:text-sm tracking-[0.3em] uppercase mb-8">
-        {past ? 'Acara Telah Berlangsung' : 'Menghitung Hari'}
-      </p>
+      <FadeIn>
+        <p className="text-[#d4a854] text-xs md:text-sm tracking-[0.3em] uppercase mb-8">
+          {past ? 'Acara Telah Berlangsung' : 'Menghitung Hari'}
+        </p>
+      </FadeIn>
 
       {!past && (
-        <div className="flex justify-center gap-4 md:gap-6 mb-10">
-          {[
-            { value: countdown.days,    label: 'Hari' },
-            { value: String(countdown.hours).padStart(2, '0'),   label: 'Jam' },
-            { value: String(countdown.minutes).padStart(2, '0'), label: 'Menit' },
-            { value: String(countdown.seconds).padStart(2, '0'), label: 'Detik' },
-          ].map(({ value, label }) => (
-            <div key={label} className="flex flex-col items-center">
-              <div className="w-14 h-14 md:w-20 md:h-20 rounded-xl flex items-center justify-center text-xl md:text-3xl font-semibold mb-2 bg-[#d4a854]/10 border border-[#d4a854]/20 text-[#f5e6c8]">
-                {value}
+        <FadeIn delay={100}>
+          <div className="flex justify-center gap-4 md:gap-6 mb-10">
+            {[
+              { value: countdown.days,    label: 'Hari' },
+              { value: String(countdown.hours).padStart(2, '0'),   label: 'Jam' },
+              { value: String(countdown.minutes).padStart(2, '0'), label: 'Menit' },
+              { value: String(countdown.seconds).padStart(2, '0'), label: 'Detik' },
+            ].map(({ value, label }) => (
+              <div key={label} className="flex flex-col items-center">
+                <div className="w-14 h-14 md:w-20 md:h-20 rounded-xl flex items-center justify-center text-xl md:text-3xl font-semibold mb-2 bg-[#d4a854]/10 border border-[#d4a854]/20 text-[#f5e6c8]">
+                  {value}
+                </div>
+                <span className="text-[10px] md:text-xs tracking-widest uppercase text-[#d4a854]/50">{label}</span>
               </div>
-              <span className="text-[10px] md:text-xs tracking-widest uppercase text-[#d4a854]/50">{label}</span>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </FadeIn>
       )}
 
+      <FadeIn delay={200}>
       <a
         href={CALENDAR_URL}
         target="_blank"
@@ -63,6 +69,7 @@ export default function SaveTheDate() {
         <Calendar size={14} />
         Simpan ke Kalender
       </a>
+      </FadeIn>
     </section>
   )
 }

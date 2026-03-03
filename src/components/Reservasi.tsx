@@ -1,6 +1,7 @@
 import { Heart, Loader2, X } from 'lucide-react'
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
+import FadeIn from './FadeIn'
 
 type Status = 'idle' | 'checking' | 'already' | 'form' | 'sending' | 'done'
 
@@ -54,10 +55,13 @@ export default function Reservasi() {
     <>
       {/* Section */}
       <section className="bg-[#0e0400] py-16 px-6 text-center border-t border-[#d4a854]/10">
-        <p className="text-[#d4a854] text-xs md:text-sm tracking-[0.3em] uppercase mb-4">Konfirmasi Kehadiran</p>
-        <p className="text-[#f5e6c8]/60 text-sm md:text-base leading-relaxed mb-8 max-w-xs mx-auto font-['Amiri',serif]">
-          Mohon konfirmasi kehadiran Anda agar kami bisa mempersiapkan dengan baik.
-        </p>
+        <FadeIn>
+          <p className="text-[#d4a854] text-xs md:text-sm tracking-[0.3em] uppercase mb-4">Konfirmasi Kehadiran</p>
+          <p className="text-[#f5e6c8]/60 text-sm md:text-base leading-relaxed mb-8 max-w-xs mx-auto font-['Amiri',serif]">
+            Mohon konfirmasi kehadiran Anda agar kami bisa mempersiapkan dengan baik.
+          </p>
+        </FadeIn>
+        <FadeIn delay={150}>
 
         {status === 'already' ? (
           <div className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#d4a854]/10 border border-[#d4a854]/30 text-[#d4a854] text-sm md:text-base">
@@ -79,6 +83,7 @@ export default function Reservasi() {
             {status === 'checking' ? 'Memeriksa...' : 'Konfirmasi Sekarang'}
           </button>
         )}
+        </FadeIn>
       </section>
 
       {/* Modal */}
