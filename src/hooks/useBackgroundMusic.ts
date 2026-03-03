@@ -1,53 +1,38 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 export function useBackgroundMusic(src: string, volume = 0.35) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
-  const [playing, setPlaying] = useState(false)
 
   useEffect(() => {
-    const audio = document.createElement('audio')
-    audio.src = src
+    const audio = new Audio(src)
     audio.loop = true
     audio.volume = volume
     audio.preload = 'auto'
-    document.body.appendChild(audio)
     audioRef.current = audio
 
-    // Auto-play on first user interaction (scroll, touch, or click)
     const tryPlay = () => {
-      if (audioRef.current && audioRef.current.paused) {
-        audioRef.current.play().then(() => setPlaying(true)).catch(() => {})
-      }
-      window.removeEventListener('scroll', tryPlay)
-      window.removeEventListener('touchstart', tryPlay)
-      window.removeEventListener('click', tryPlay)
+      if (!audioRef.current) return
+      audioRef.current.play().catch(() => {})
+      cleanup()
     }
-    window.addEventListener('scroll', tryPlay, { once: true })
-    window.addEventListener('touchstart', tryPlay, { once: true })
-    window.addEventListener('click', tryPlay, { once: true })
+
+    const cleanup = () => {
+      document.removeEventListener('scroll', tryPlay, true)
+      document.removeEventListener('touchstart', tryPlay, true)
+      document.removeEventListener('click', tryPlay, true)
+      document.removeEventListener('pointerdown', tryPlay, true)
+    }
+
+    document.addEventListener('scroll', tryPlay, { once: true, capture: true })
+    document.addEventListener('touchstart', tryPlay, { once: true, capture: true })
+    document.addEventListener('click', tryPlay, { once: true, capture: true })
+    document.addEventListener('pointerdown', tryPlay, { once: true, capture: true })
 
     return () => {
-      window.removeEventListener('scroll', tryPlay)
-      window.removeEventListener('touchstart', tryPlay)
-      window.removeEventListener('click', tryPlay)
+      cleanup()
       audio.pause()
       audio.src = ''
-      document.body.removeChild(audio)
       audioRef.current = null
     }
   }, [src, volume])
-
-  async function toggle() {
-    const audio = audioRef.current
-    if (!audio) return
-    if (audio.paused) {
-      await audio.play()
-      setPlaying(true)
-    } else {
-      audio.pause()
-      setPlaying(false)
-    }
-  }
-
-  return { playing, toggle }
 }
