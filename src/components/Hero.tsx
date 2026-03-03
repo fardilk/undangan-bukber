@@ -8,7 +8,7 @@ export default function Hero() {
         alt="Keluarga Ngangin"
         className="absolute inset-0 w-full h-full object-cover object-top"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-[#1a0a00]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-[#1a0a00] pointer-events-none" />
 
       <div className="relative z-10 flex flex-col items-center gap-6 max-w-lg">
         <Moon className="text-[#d4a854]" size={48} strokeWidth={1.5} />

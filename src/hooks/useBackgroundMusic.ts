@@ -6,35 +6,31 @@ export function useBackgroundMusic(src: string, volume = 0.35) {
   useEffect(() => {
     const audio = new Audio(src)
     audio.loop = true
-    audio.volume = 0
-    audio.muted = true  // muted autoplay diizinkan semua browser
+    audio.volume = volume
     audio.preload = 'auto'
     audioRef.current = audio
 
-    // Start muted (always allowed)
-    audio.play().catch(() => {})
+    const play = () => audio.play().catch(() => {})
 
-    // Unmute on first interaction
-    const unmute = () => {
-      if (!audioRef.current) return
-      audioRef.current.muted = false
-      audioRef.current.volume = volume
-      document.removeEventListener('click',      unmute, true)
-      document.removeEventListener('touchstart', unmute, true)
-      document.removeEventListener('keydown',    unmute, true)
-      document.removeEventListener('scroll',     unmute, true)
+    const onInteraction = () => {
+      play()
+      document.removeEventListener('click',      onInteraction, true)
+      document.removeEventListener('touchend',   onInteraction, true)
+      document.removeEventListener('pointerup',  onInteraction, true)
     }
 
-    document.addEventListener('click',      unmute, { once: true, capture: true })
-    document.addEventListener('touchstart', unmute, { once: true, capture: true })
-    document.addEventListener('keydown',    unmute, { once: true, capture: true })
-    document.addEventListener('scroll',     unmute, { once: true, capture: true })
+    // Try autoplay directly first
+    audio.play().catch(() => {
+      // Blocked — wait for user interaction
+      document.addEventListener('click',     onInteraction, { once: true, capture: true })
+      document.addEventListener('touchend',  onInteraction, { once: true, capture: true })
+      document.addEventListener('pointerup', onInteraction, { once: true, capture: true })
+    })
 
     return () => {
-      document.removeEventListener('click',      unmute, true)
-      document.removeEventListener('touchstart', unmute, true)
-      document.removeEventListener('keydown',    unmute, true)
-      document.removeEventListener('scroll',     unmute, true)
+      document.removeEventListener('click',     onInteraction, true)
+      document.removeEventListener('touchend',  onInteraction, true)
+      document.removeEventListener('pointerup', onInteraction, true)
       audio.pause()
       audio.src = ''
       audioRef.current = null
