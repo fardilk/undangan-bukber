@@ -6,6 +6,7 @@ import DaftarUndangan from './components/DaftarUndangan'
 import PesanBukber from './components/PesanBukber'
 import AyatPenutup from './components/AyatPenutup'
 import Footer from './components/Footer'
+import MusicToggle from './components/MusicToggle'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
       <PesanBukber />
       <AyatPenutup />
       <Footer />
+      <MusicToggle />
     </div>
   )
 }
